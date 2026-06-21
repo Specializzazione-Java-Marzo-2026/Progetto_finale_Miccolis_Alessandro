@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${category != null} ? 'Modifica categoria' : 'Crea categoria'">Categoria</title>
+</head>
+<body>
+<h1 th:text="${category != null} ? 'Modifica categoria' : 'Crea categoria'"></h1>
+
+<form th:if="${category} != null" th:action="@{/admin/categories/{id}/edit(id=${category.id})}" method="post">
+    <div>
+        <label>Nome</label>
+        <input type="text" name="name" required th:value="${category.name}" />
+    </div>
+    <button type="submit">Aggiorna</button>
+</form>
+<form th:unless="${category} != null" th:action="@{/admin/categories/create}" method="post">
+    <div>
+        <label>Nome</label>
+        <input type="text" name="name" required />
+    </div>
+    <button type="submit">Crea</button>
+</form>
+
+<p><a th:href="@{/admin/categories}">Torna alla lista categorie</a></p>
+</body>
+</html>

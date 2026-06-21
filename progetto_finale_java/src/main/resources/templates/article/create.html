@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Crea Articolo - Aulab Chronicle</title>
+</head>
+<body>
+<h1>Nuovo Articolo</h1>
+
+<form th:action="@{/article/store}" method="post" enctype="multipart/form-data">
+    <div>
+        <label>Titolo</label>
+        <input type="text" name="title" required maxlength="150" />
+    </div>
+    <div>
+        <label>Sottotitolo</label>
+        <input type="text" name="subtitle" required maxlength="200" />
+    </div>
+    <div>
+        <label>Categoria</label>
+        <select name="categoryId" required>
+            <option value="" disabled selected>Seleziona categoria</option>
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.name}"></option>
+        </select>
+    </div>
+    <div>
+        <label>Corpo dell'articolo</label>
+        <textarea name="body" required rows="10" cols="60"></textarea>
+    </div>
+    <div>
+        <label>Immagine (opzionale)</label>
+        <input type="file" name="imageFile" accept="image/*" />
+    </div>
+    <button type="submit">Salva articolo</button>
+</form>
+
+<p><a th:href="@{/home}">Torna alla home</a></p>
+</body>
+</html>

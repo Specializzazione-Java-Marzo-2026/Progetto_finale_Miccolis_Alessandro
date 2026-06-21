@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Richieste Collaborazione</title>
+</head>
+<body>
+<h1>Richieste Collaborazione</h1>
+
+<div th:if="${requests.isEmpty()}">
+    <p>Nessuna richiesta in attesa.</p>
+</div>
+
+<table th:if="${!requests.isEmpty()}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Utente</th>
+        <th>Ruolo</th>
+        <th>Data</th>
+        <th>Dettaglio</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="request : ${requests}">
+        <td th:text="${request.id}"></td>
+        <td th:text="${request.user.username}"></td>
+        <td th:text="${request.roleRequested}"></td>
+        <td th:text="${#temporals.format(request.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+        <td><a th:href="@{/admin/career/requests/{id}(id=${request.id})}">Apri</a></td>
+    </tr>
+    </tbody>
+</table>
+
+<p><a th:href="@{/home}">Torna alla home</a></p>
+</body>
+</html>

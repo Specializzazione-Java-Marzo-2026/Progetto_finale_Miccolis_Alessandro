@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Revisore</title>
+</head>
+<body>
+<h1>Articoli da revisionare</h1>
+
+<div th:if="${articles.isEmpty()}">
+    <p>Non ci sono articoli in attesa di revisione.</p>
+</div>
+
+<table th:if="${!articles.isEmpty()}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Titolo</th>
+        <th>Autore</th>
+        <th>Data</th>
+        <th>Dettaglio</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="article : ${articles}">
+        <td th:text="${article.id}"></td>
+        <td th:text="${article.title}"></td>
+        <td th:text="${article.user.username}"></td>
+        <td th:text="${#temporals.format(article.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+        <td><a th:href="@{/revisor/articles/{id}(id=${article.id})}">Apri</a></td>
+    </tr>
+    </tbody>
+</table>
+
+<p><a th:href="@{/home}">Torna alla home</a></p>
+</body>
+</html>

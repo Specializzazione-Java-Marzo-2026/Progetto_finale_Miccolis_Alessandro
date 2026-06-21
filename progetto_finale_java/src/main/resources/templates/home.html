@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Home - Aulab Chronicle</title>
+</head>
+<body>
+<h1>Benvenuto in Aulab Chronicle</h1>
+
+<form th:action="@{/search}" method="get">
+    <label for="searchTerm">Cerca articoli:</label>
+    <input type="text" id="searchTerm" name="searchTerm" placeholder="Titolo, sottotitolo o categoria" th:value="${searchTerm}" />
+    <button type="submit">Cerca</button>
+</form>
+
+<h2 th:text="${viewTitle != null} ? ${viewTitle} : 'Ultimi articoli'"></h2>
+<p>Qui puoi registrarti, fare login e creare un articolo se sei autenticato.</p>
+
+<div>
+    <a th:href="@{/register}">Registrati</a> |
+    <a th:href="@{/login}">Login</a> |
+    <a th:href="@{/article/create}" sec:authorize="isAuthenticated()">Inserisci articolo</a> |
+    <a th:href="@{/career/request}" sec:authorize="isAuthenticated()">Lavora con noi</a> |
+    <a th:href="@{/admin/career/requests}" sec:authorize="hasRole('ADMIN')">Dashboard Admin</a> |
+    <a th:href="@{/revisor/articles}" sec:authorize="hasRole('REVISOR')">Dashboard Revisore</a>
+</div>
+
+<div sec:authorize="isAuthenticated()">
+    <p>Sei autenticato. Puoi creare un nuovo articolo.</p>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+</div>
+
+<section>
+    <h2>Ultimi articoli</h2>
+    <div th:if="${articles.isEmpty()}">
+        <p>Nessun articolo disponibile.</p>
+    </div>
+    <ul>
+        <li th:each="article : ${articles}">
+            <div>
+                <a th:href="@{/article/{id}(id=${article.id})}">
+                    <span th:text="${article.title}"></span>
+                </a>
+            </div>
+            <div th:if="${article.image != null}">
+                <img th:src="${article.image.path}" alt="Immagine articolo" style="max-width:200px; max-height:150px;" />
+            </div>
+            <div>
+                <span>Categoria: </span>
+                <a th:href="@{/category/{categoryId}(categoryId=${article.category.id})}" th:text="${article.category.name}"></a>
+            </div>
+            <div>
+                <span>Autore: </span>
+                <a th:href="@{/author/{userId}(userId=${article.user.id})}" th:text="${article.user.username}"></a>
+            </div>
+            <div>
+                <span th:text="${#temporals.format(article.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+            </div>
+        </li>
+    </ul>
+</section>
+
+<div sec:authorize="isAnonymous()">
+    <p>Non sei autenticato. Registrati o fai login per creare articoli.</p>
+</div>
+</body>
+</html>

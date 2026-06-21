@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Revisione Articolo</title>
+</head>
+<body>
+<h1 th:text="${article.title}">Titolo Articolo</h1>
+<p><strong>Sottotitolo:</strong> <span th:text="${article.subtitle}"></span></p>
+<p><strong>Autore:</strong> <span th:text="${article.user.username}"></span></p>
+<p><strong>Categoria:</strong> <span th:text="${article.category.name}"></span></p>
+<p><strong>Creato il:</strong> <span th:text="${#temporals.format(article.createdAt, 'dd/MM/yyyy HH:mm')}"></span></p>
+<div>
+    <p th:text="${article.body}"></p>
+</div>
+
+<form th:action="@{/revisor/articles/{id}/accept(id=${article.id})}" method="post">
+    <button type="submit">Accetta articolo</button>
+</form>
+<form th:action="@{/revisor/articles/{id}/reject(id=${article.id})}" method="post">
+    <button type="submit">Rifiuta articolo</button>
+</form>
+
+<p><a th:href="@{/revisor/articles}">Torna alla dashboard revisore</a></p>
+</body>
+</html>

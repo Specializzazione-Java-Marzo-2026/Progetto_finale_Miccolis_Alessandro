@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestione Categorie</title>
+</head>
+<body>
+<h1>Gestione Categorie</h1>
+
+<p><a th:href="@{/admin/categories/create}">Crea nuova categoria</a></p>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Azioni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="category : ${categories}">
+        <td th:text="${category.id}"></td>
+        <td th:text="${category.name}"></td>
+        <td>
+            <a th:href="@{/admin/categories/{id}/edit(id=${category.id})}">Modifica</a>
+            <form th:action="@{/admin/categories/{id}/delete(id=${category.id})}" method="post" style="display:inline;">
+                <button type="submit">Elimina</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p><a th:href="@{/home}">Torna alla home</a></p>
+</body>
+</html>

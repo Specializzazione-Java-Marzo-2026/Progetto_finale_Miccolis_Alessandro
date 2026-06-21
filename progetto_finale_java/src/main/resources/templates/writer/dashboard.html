@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Writer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            margin-top: 0;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-create {
+            background-color: #28a745;
+        }
+
+        .btn-detail {
+            background-color: #007bff;
+        }
+
+        .btn-edit {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        table th {
+            background-color: #f0f0f0;
+        }
+
+        .status-accepted {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .status-rejected {
+            color: red;
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .empty-message {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+
+        form {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-bar">
+            <div>
+                <h1>Dashboard Writer</h1>
+                <p th:text="'Benvenuto, ' + ${writer.username} + '!'">Benvenuto!</p>
+            </div>
+
+            <a th:href="@{/article/create}" class="btn btn-create">Inserisci articolo</a>
+        </div>
+
+        <h2>I tuoi articoli</h2>
+
+        <div th:if="${#lists.isEmpty(articles)}" class="empty-message">
+            Non hai ancora scritto nessun articolo.
+        </div>
+
+        <table th:if="${not #lists.isEmpty(articles)}">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Titolo</th>
+                    <th>Sottotitolo</th>
+                    <th>Categoria</th>
+                    <th>Data creazione</th>
+                    <th>Stato</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="article : ${articles}">
+                    <td th:text="${article.id}">1</td>
+                    <td th:text="${article.title}">Titolo</td>
+                    <td th:text="${article.subtitle}">Sottotitolo</td>
+                    <td th:text="${article.category.name}">Categoria</td>
+                    <td th:text="${article.createdAt}">2025-01-01</td>
+
+                    <td>
+                        <span th:if="${article.accepted}" class="status-accepted">Accettato</span>
+                        <span th:if="${!article.accepted and !article.reviewed}" class="status-pending">In revisione</span>
+                        <span th:if="${!article.accepted and article.reviewed}" class="status-rejected">Rifiutato</span>
+                    </td>
+
+                    <td>
+                        <div class="actions">
+                            <a th:href="@{/article/{id}(id=${article.id})}" class="btn btn-detail">Dettaglio</a>
+
+                            <a th:href="@{/article/edit/{id}(id=${article.id})}" class="btn btn-edit">Modifica</a>
+
+                            <form th:action="@{/article/delete/{id}(id=${article.id})}" method="post">
+                                <button type="submit" class="btn btn-delete"
+                                        onclick="return confirm('Sei sicuro di voler cancellare questo articolo?')">
+                                    Cancella
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

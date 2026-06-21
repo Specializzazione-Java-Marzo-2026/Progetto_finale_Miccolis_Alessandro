@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Richiesta Collaborazione</title>
+</head>
+<body>
+<h1>Lavora con noi</h1>
+
+<div th:if="${successMessage}">
+    <p th:text="${successMessage}"></p>
+</div>
+<div th:if="${errorMessage}">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<form th:action="@{/career/request}" method="post">
+    <div>
+        <label>Ruolo richiesto</label>
+        <select name="roleRequested" required>
+            <option value="" disabled selected>Seleziona ruolo</option>
+            <option th:each="roleOption : ${roleOptions}"
+                    th:value="${roleOption}"
+                    th:text="${roleOption}"></option>
+        </select>
+    </div>
+    <div>
+        <label>Messaggio</label>
+        <textarea name="message" required rows="6" cols="60"></textarea>
+    </div>
+    <button type="submit">Invia richiesta</button>
+</form>
+
+<p><a th:href="@{/home}">Torna alla home</a></p>
+</body>
+</html>

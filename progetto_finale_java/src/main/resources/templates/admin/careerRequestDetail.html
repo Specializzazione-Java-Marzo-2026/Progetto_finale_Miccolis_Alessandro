@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dettaglio Richiesta</title>
+</head>
+<body>
+<h1>Dettaglio Richiesta</h1>
+
+<div>
+    <p><strong>ID:</strong> <span th:text="${request.id}"></span></p>
+    <p><strong>Utente:</strong> <span th:text="${request.user.username}"></span> (<span th:text="${request.user.email}"></span>)</p>
+    <p><strong>Ruolo richiesto:</strong> <span th:text="${request.roleRequested}"></span></p>
+    <p><strong>Messaggio:</strong></p>
+    <p th:text="${request.message}"></p>
+    <p><strong>Data invio:</strong> <span th:text="${#temporals.format(request.createdAt, 'dd/MM/yyyy HH:mm')}"></span></p>
+</div>
+
+<form th:action="@{/admin/career/requests/{id}/accept(id=${request.id})}" method="post">
+    <button type="submit">Accetta richiesta</button>
+</form>
+
+<p><a th:href="@{/admin/career/requests}">Torna alle richieste</a></p>
+</body>
+</html>

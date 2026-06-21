@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Aulab Chronicle</title>
+</head>
+<body>
+<h1>Login</h1>
+
+<form th:action="@{/login}" method="post">
+    <div>
+        <label>Email</label>
+        <input type="email" name="username" />
+    </div>
+    <div>
+        <label>Password</label>
+        <input type="password" name="password" />
+    </div>
+    <button type="submit">Accedi</button>
+</form>
+
+<div th:if="${param.logout}">
+    <p>Logout eseguito con successo.</p>
+</div>
+<div th:if="${param.error}">
+    <p>Login fallito. Controlla email e password.</p>
+</div>
+
+<p><a th:href="@{/register}">Registrati</a></p>
+<p><a th:href="@{/home}">Torna alla home</a></p>
+</body>
+</html>

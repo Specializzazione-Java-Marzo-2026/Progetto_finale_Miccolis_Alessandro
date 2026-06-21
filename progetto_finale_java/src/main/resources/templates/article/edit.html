@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifica articolo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+```
+    .container {
+        width: 90%;
+        max-width: 900px;
+        margin: 40px auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        margin-top: 0;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    select,
+    textarea,
+    input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    textarea {
+        min-height: 180px;
+        resize: vertical;
+    }
+
+    .current-image {
+        margin-top: 10px;
+    }
+
+    .current-image img {
+        max-width: 250px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+
+    .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 25px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-save {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .note {
+        font-size: 13px;
+        color: #666;
+        margin-top: 6px;
+    }
+</style>
+```
+
+</head>
+<body>
+
+<div class="container">
+    <h1>Modifica articolo</h1>
+
+```
+<form th:action="@{/article/update/{id}(id=${article.id})}" method="post" enctype="multipart/form-data">
+
+    <div class="form-group">
+        <label for="title">Titolo</label>
+        <input type="text" id="title" name="title" th:value="${article.title}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="subtitle">Sottotitolo</label>
+        <input type="text" id="subtitle" name="subtitle" th:value="${article.subtitle}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="body">Corpo del testo</label>
+        <textarea id="body" name="body" required th:text="${article.body}"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="categoryId">Categoria</label>
+        <select id="categoryId" name="categoryId" required>
+            <option value="">Seleziona una categoria</option>
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.name}"
+                    th:selected="${article.category != null and article.category.id == category.id}">
+            </option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Immagine attuale</label>
+
+        <div th:if="${article.image != null}" class="current-image">
+            <img th:src="${article.image.path}" alt="Immagine articolo">
+        </div>
+
+        <div th:if="${article.image == null}" class="note">
+            Nessuna immagine presente per questo articolo.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="imageFile">Sostituisci immagine (opzionale)</label>
+        <input type="file" id="imageFile" name="imageFile" accept="image/*">
+        <p class="note">Se non scegli un file, l’immagine attuale resterà invariata.</p>
+    </div>
+
+    <div class="actions">
+        <button type="submit" class="btn btn-save">Salva modifiche</button>
+        <a th:href="@{/writer/dashboard}" class="btn btn-back">Torna alla dashboard</a>
+    </div>
+</form>
+```
+
+</div>
+
+</body>
+</html>

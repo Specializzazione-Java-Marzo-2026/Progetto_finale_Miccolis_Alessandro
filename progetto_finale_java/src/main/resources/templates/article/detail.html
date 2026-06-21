@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${article.title} + ' - Aulab Chronicle'">Dettaglio Articolo</title>
+</head>
+<body>
+<h1 th:text="${article.title}">Titolo articolo</h1>
+<h2 th:text="${article.subtitle}">Sottotitolo</h2>
+<div th:if="${article.image != null}">
+    <img th:src="${article.image.path}" alt="Immagine articolo" style="max-width:500px; max-height:400px;" />
+</div>
+<p><strong>Categoria:</strong> <a th:href="@{/category/{categoryId}(categoryId=${article.category.id})}" th:text="${article.category.name}"></a></p>
+<p><strong>Autore:</strong> <a th:href="@{/author/{userId}(userId=${article.user.id})}" th:text="${article.user.username}"></a></p>
+<p><strong>Creato il:</strong> <span th:text="${#temporals.format(article.createdAt, 'dd/MM/yyyy HH:mm')}"></span></p>
+<div>
+    <p th:text="${article.body}"></p>
+</div>
+
+<div th:if="${successMessage}">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<p><a th:href="@{/home}">Torna alla home</a></p>
+</body>
+</html>
