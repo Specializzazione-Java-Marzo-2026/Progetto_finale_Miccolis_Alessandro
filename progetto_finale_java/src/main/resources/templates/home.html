@@ -10,7 +10,7 @@
             box-sizing: border-box;
         }
 
-```
+
     body {
         margin: 0;
         font-family: Arial, sans-serif;
@@ -294,7 +294,7 @@
         }
     }
 </style>
-```
+
 
 </head>
 <body>
@@ -303,7 +303,7 @@
     <div class="nav-left">
         <a th:href="@{/home}" class="brand">Aulab Chronicle</a>
 
-```
+
     <a th:href="@{/home}" class="nav-link">Home</a>
 
     <div th:if="${#authorization.expression('!isAuthenticated()')}">
@@ -341,12 +341,12 @@
         <button type="submit">Cerca</button>
     </form>
 </div>
-```
+
 
 </nav>
 
 <section class="hero">
-    <h1>Informazione verificata, in un solo posto</h1>
+    <h1>Benvenuto in Aulab Chronicle</h1>
     <p>
         Leggi gli ultimi articoli pubblicati e scopri contenuti verificati per categoria e autore.
     </p>
@@ -354,7 +354,7 @@
 
 <main class="container">
 
-```
+
 <div th:if="${successMessage}" class="message message-success" th:text="${successMessage}"></div>
 <div th:if="${errorMessage}" class="message message-error" th:text="${errorMessage}"></div>
 
@@ -418,7 +418,7 @@
         </div>
     </div>
 </div>
-```
+
 
 </main>
 
