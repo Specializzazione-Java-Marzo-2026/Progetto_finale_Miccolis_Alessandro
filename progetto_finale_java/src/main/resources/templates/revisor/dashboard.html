@@ -1,37 +1,274 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Revisore</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Revisore - Aulab Chronicle</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            color: #222;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navbar {
+            background-color: #111827;
+            color: white;
+            padding: 16px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-left,
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-size: 26px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-link {
+            background-color: #374151;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: #4b5563;
+        }
+
+        .page-wrapper {
+            width: 92%;
+            max-width: 1200px;
+            margin: 35px auto 50px auto;
+        }
+
+        .header-box {
+            margin-bottom: 25px;
+        }
+
+        .header-box h1 {
+            margin: 0 0 8px 0;
+            font-size: 32px;
+            color: #111827;
+        }
+
+        .header-box p {
+            margin: 0;
+            color: #555;
+        }
+
+        .message {
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        .message-success {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .message-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .table-card {
+            background-color: white;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f3f4f6;
+            color: #111827;
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-detail {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .btn-detail:hover {
+            background-color: #1d4ed8;
+        }
+
+        .empty-state {
+            background-color: white;
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            color: #555;
+        }
+
+        .footer {
+            background-color: #111827;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
+                display: block;
+                width: 100%;
+            }
+
+            thead {
+                display: none;
+            }
+
+            tr {
+                border-bottom: 1px solid #e5e7eb;
+                padding: 12px;
+            }
+
+            td {
+                border: none;
+                padding: 8px 0;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>Articoli da revisionare</h1>
 
-<div th:if="${articles.isEmpty()}">
-    <p>Non ci sono articoli in attesa di revisione.</p>
+<nav class="navbar">
+    <div class="nav-left">
+        <a th:href="@{/home}" class="brand">Aulab Chronicle</a>
+        <a th:href="@{/home}" class="nav-link">Home</a>
+    </div>
+
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="nav-link">Logout</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+    <div class="header-box">
+        <h1>Dashboard Revisore</h1>
+        <p>Qui puoi visualizzare gli articoli in attesa di revisione e accedere al dettaglio per approvarli o rifiutarli.</p>
+    </div>
+
+    <div th:if="${successMessage}" class="message message-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="message message-error" th:text="${errorMessage}"></div>
+
+    <div th:if="${articles == null or #lists.isEmpty(articles)}" class="empty-state">
+        Non ci sono articoli da revisionare al momento.
+    </div>
+
+    <div th:if="${articles != null and !#lists.isEmpty(articles)}" class="table-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Titolo</th>
+                    <th>Autore</th>
+                    <th>Categoria</th>
+                    <th>Data</th>
+                    <th>Stato</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="article : ${articles}">
+                    <td th:text="${article.title}">Titolo articolo</td>
+                    <td th:text="${article.user.username}">Autore</td>
+                    <td th:text="${article.category.name}">Categoria</td>
+                    <td th:text="${#temporals.format(article.createdAt, 'dd/MM/yyyy HH:mm')}">Data</td>
+                    <td>
+                        <span class="status">In revisione</span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a th:href="@{/revisor/articles/{id}(id=${article.id})}" class="btn btn-detail">Apri dettaglio</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<table th:if="${!articles.isEmpty()}">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Titolo</th>
-        <th>Autore</th>
-        <th>Data</th>
-        <th>Dettaglio</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="article : ${articles}">
-        <td th:text="${article.id}"></td>
-        <td th:text="${article.title}"></td>
-        <td th:text="${article.user.username}"></td>
-        <td th:text="${#temporals.format(article.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
-        <td><a th:href="@{/revisor/articles/{id}(id=${article.id})}">Apri</a></td>
-    </tr>
-    </tbody>
-</table>
+<footer class="footer">
+    © Aulab Chronicle - Progetto finale Java
+</footer>
 
-<p><a th:href="@{/home}">Torna alla home</a></p>
 </body>
 </html>
