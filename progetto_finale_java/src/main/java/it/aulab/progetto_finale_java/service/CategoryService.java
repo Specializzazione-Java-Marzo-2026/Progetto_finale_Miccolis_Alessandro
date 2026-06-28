@@ -6,15 +6,18 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import it.aulab.progetto_finale_java.model.Category;
+import it.aulab.progetto_finale_java.repository.ArticleRepository;
 import it.aulab.progetto_finale_java.repository.CategoryRepository;
 
 @Service
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ArticleRepository articleRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ArticleRepository articleRepository) {
         this.categoryRepository = categoryRepository;
+        this.articleRepository = articleRepository;
     }
 
     public List<Category> findAll() {
@@ -38,6 +41,9 @@ public class CategoryService {
     }
 
     public void delete(Long id) {
+        if (articleRepository.existsByCategoryId(id)) {
+            throw new IllegalStateException("Non puoi eliminare una categoria associata a uno o più articoli.");
+        }
         categoryRepository.deleteById(id);
     }
 }

@@ -36,7 +36,9 @@ public class AuthController {
 
     @GetMapping("/register")
     public String registerForm(Model model) {
-        model.addAttribute("registerDTO", new RegisterDTO());
+        if (!model.containsAttribute("registerDTO")) {
+            model.addAttribute("registerDTO", new RegisterDTO());
+        }
         return "register";
     }
 
@@ -44,7 +46,16 @@ public class AuthController {
     public String registerSubmit(@Valid @ModelAttribute("registerDTO") RegisterDTO registerDTO,
                                  BindingResult bindingResult,
                                  Model model) {
+
         if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldErrors()
+                    .stream()
+                    .map(error -> error.getDefaultMessage())
+                    .distinct()
+                    .reduce((first, second) -> first + " - " + second)
+                    .orElse("Controlla i dati inseriti.");
+
+            model.addAttribute("errorMessage", errorMessage);
             return "register";
         }
 
@@ -54,7 +65,7 @@ public class AuthController {
             model.addAttribute("registerDTO", new RegisterDTO());
             return "register";
         } catch (IllegalArgumentException e) {
-            model.addAttribute("registrationError", e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
             return "register";
         }
     }

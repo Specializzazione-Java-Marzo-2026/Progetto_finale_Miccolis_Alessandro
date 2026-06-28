@@ -13,66 +13,60 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final UserDetailsService userDetailsService;
 
-private final UserDetailsService userDetailsService;
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
-public SecurityConfig(UserDetailsService userDetailsService) {
-    this.userDetailsService = userDetailsService;
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                "/",
+                                "/home",
+                                "/login",
+                                "/register",
+                                "/search",
+                                "/css/**",
+                                "/js/**",
+                                "/article/*",
+                                "/category/**",
+                                "/author/**"
+                        ).permitAll()
+                        .requestMatchers("/career/**").authenticated()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/revisor/**").hasRole("REVISOR")
+                        .requestMatchers(
+                                "/writer/**",
+                                "/article/create",
+                                "/article/store",
+                                "/article/edit/**",
+                                "/article/update/**",
+                                "/article/delete/**"
+                        ).hasRole("WRITER")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/home", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutRequestMatcher(request -> "GET".equals(request.getMethod()) && "/logout".equals(request.getServletPath()))
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                )
+                .userDetailsService(userDetailsService);
+
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
 
-@Bean
-public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-            .authorizeHttpRequests(authorize -> authorize
-                    // rotte pubbliche
-                    .requestMatchers(
-                            "/", "/home", "/login", "/register", "/search",
-                            "/css/**", "/js/**",
-                            "/article/*", "/category/**", "/author/**"
-                    ).permitAll()
-
-                    // richiesta collaborazione: utente autenticato
-                    .requestMatchers("/operations/career/**").authenticated()
-
-                    // area admin
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-
-                    // area revisore
-                    .requestMatchers("/revisor/**").hasRole("REVISOR")
-
-                    // area writer
-                    .requestMatchers(
-                            "/writer/**",
-                            "/article/create",
-                            "/article/store",
-                            "/article/edit/**",
-                            "/article/update/**",
-                            "/article/delete/**"
-                    ).hasRole("WRITER")
-
-                    // tutto il resto richiede autenticazione
-                    .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                    .loginPage("/login")
-                    .loginProcessingUrl("/login")
-                    .defaultSuccessUrl("/home", true)
-                    .permitAll()
-            )
-            .logout(logout -> logout
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login?logout")
-                    .permitAll()
-            )
-            .userDetailsService(userDetailsService);
-
-    return http.build();
-}
-
-@Bean
-public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-}
-
-
-}

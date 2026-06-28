@@ -1,36 +1,243 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Richiesta Collaborazione</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lavora con noi - Aulab Chronicle</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            color: #222;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navbar {
+            background-color: #111827;
+            color: white;
+            padding: 16px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-left,
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-size: 26px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-link {
+            background-color: #374151;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: #4b5563;
+        }
+
+        .page-wrapper {
+            width: 92%;
+            max-width: 900px;
+            margin: 35px auto 50px auto;
+        }
+
+        .page-title {
+            margin: 0 0 8px 0;
+            font-size: 32px;
+            color: #111827;
+        }
+
+        .page-subtitle {
+            margin: 0 0 24px 0;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .form-card {
+            background-color: white;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            padding: 32px;
+        }
+
+        .message {
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        .message-success {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .message-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: white;
+        }
+
+        textarea {
+            min-height: 180px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .note {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+        }
+
+        .btn {
+            display: inline-block;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #111827;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .footer {
+            background-color: #111827;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-<h1>Lavora con noi</h1>
 
-<div th:if="${successMessage}">
-    <p th:text="${successMessage}"></p>
-</div>
-<div th:if="${errorMessage}">
-    <p th:text="${errorMessage}"></p>
-</div>
-
-<form th:action="@{/career/request}" method="post">
-    <div>
-        <label>Ruolo richiesto</label>
-        <select name="roleRequested" required>
-            <option value="" disabled selected>Seleziona ruolo</option>
-            <option th:each="roleOption : ${roleOptions}"
-                    th:value="${roleOption}"
-                    th:text="${roleOption}"></option>
-        </select>
+<nav class="navbar">
+    <div class="nav-left">
+        <a th:href="@{/home}" class="brand">Aulab Chronicle</a>
+        <a th:href="@{/home}" class="nav-link">Home</a>
     </div>
-    <div>
-        <label>Messaggio</label>
-        <textarea name="message" required rows="6" cols="60"></textarea>
-    </div>
-    <button type="submit">Invia richiesta</button>
-</form>
 
-<p><a th:href="@{/home}">Torna alla home</a></p>
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="nav-link">Logout</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+    <h1 class="page-title">Lavora con noi</h1>
+    <p class="page-subtitle">
+        Invia la tua richiesta per entrare nella piattaforma come writer o revisore. La richiesta verrà valutata da un amministratore.
+    </p>
+
+    <div class="form-card">
+        <div th:if="${successMessage}" class="message message-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="message message-error" th:text="${errorMessage}"></div>
+
+        <form th:action="@{/career/request}" method="post">
+            <div class="form-group">
+                <label for="roleRequested">Ruolo richiesto</label>
+                <select id="roleRequested" name="roleRequested" required>
+                    <option value="">Seleziona un ruolo</option>
+                    <option value="ROLE_WRITER">Writer</option>
+                    <option value="ROLE_REVISOR">Revisore</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Messaggio</label>
+                <textarea id="message" name="message" placeholder="Scrivi un breve messaggio per spiegare perché vuoi entrare nel team" required></textarea>
+                <p class="note">La richiesta verrà inviata all'amministratore e riceverai conferma una volta presa in carico.</p>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">Invia richiesta</button>
+                <a th:href="@{/home}" class="btn btn-secondary">Torna alla home</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<footer class="footer">
+    © Aulab Chronicle - Progetto finale Java
+</footer>
+
 </body>
 </html>

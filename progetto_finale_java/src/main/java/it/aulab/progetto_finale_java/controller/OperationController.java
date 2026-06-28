@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import it.aulab.progetto_finale_java.model.CareerRequest;
 import it.aulab.progetto_finale_java.model.User;
 import it.aulab.progetto_finale_java.service.CareerRequestService;
+import it.aulab.progetto_finale_java.service.CategoryService;
 import it.aulab.progetto_finale_java.service.UserService;
 
 @Controller
@@ -21,10 +22,14 @@ public class OperationController {
 
     private final CareerRequestService careerRequestService;
     private final UserService userService;
+    private final CategoryService categoryService;
 
-    public OperationController(CareerRequestService careerRequestService, UserService userService) {
+    public OperationController(CareerRequestService careerRequestService,
+                               UserService userService,
+                               CategoryService categoryService) {
         this.careerRequestService = careerRequestService;
         this.userService = userService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/career/request")
@@ -52,23 +57,24 @@ public class OperationController {
         return "career/requestForm";
     }
 
-    @GetMapping("/admin/career/requests")
-    public String adminCareerRequests(Model model) {
-        List<CareerRequest> requests = careerRequestService.findPendingRequests();
-        model.addAttribute("requests", requests);
-        return "admin/careerRequests";
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard(Model model) {
+        List<CareerRequest> careerRequests = careerRequestService.findPendingRequests();
+        model.addAttribute("careerRequests", careerRequests);
+        model.addAttribute("categories", categoryService.findAll());
+        return "admin/dashboard";
     }
 
-    @GetMapping("/admin/career/requests/{id}")
+    @GetMapping("/admin/request/{id}")
     public String adminCareerRequestDetail(@PathVariable Long id, Model model) {
         CareerRequest request = careerRequestService.findById(id);
         model.addAttribute("request", request);
-        return "admin/careerRequestDetail";
+        return "admin/requestDetail";
     }
 
-    @PostMapping("/admin/career/requests/{id}/accept")
+    @PostMapping("/admin/request/{id}/accept")
     public String acceptCareerRequest(@PathVariable Long id) {
         careerRequestService.processRequest(id);
-        return "redirect:/admin/career/requests";
+        return "redirect:/admin/dashboard";
     }
 }

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dettaglio richiesta ruolo - Aulab Chronicle</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            color: #222;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navbar {
+            background-color: #111827;
+            color: white;
+            padding: 16px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-left,
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-size: 26px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-link {
+            background-color: #374151;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: #4b5563;
+        }
+
+        .page-wrapper {
+            width: 92%;
+            max-width: 900px;
+            margin: 35px auto 50px auto;
+        }
+
+        .page-title {
+            margin: 0 0 20px 0;
+            font-size: 32px;
+            color: #111827;
+        }
+
+        .detail-card {
+            background-color: white;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            padding: 32px;
+        }
+
+        .detail-row {
+            margin-bottom: 18px;
+        }
+
+        .detail-label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-done {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .actions {
+            margin-top: 28px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-accept {
+            background-color: #16a34a;
+            color: white;
+        }
+
+        .btn-accept:hover {
+            background-color: #15803d;
+        }
+
+        .btn-back {
+            background-color: #e5e7eb;
+            color: #111827;
+        }
+
+        .btn-back:hover {
+            background-color: #d1d5db;
+        }
+
+        .footer {
+            background-color: #111827;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        form {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <a th:href="@{/home}" class="brand">Aulab Chronicle</a>
+        <a th:href="@{/admin/dashboard}" class="nav-link">Dashboard Admin</a>
+    </div>
+
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="nav-link">Logout</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+    <h1 class="page-title">Dettaglio richiesta ruolo</h1>
+
+    <div class="detail-card">
+        <div class="detail-row">
+            <span class="detail-label">Utente</span>
+            <div class="detail-value" th:text="${request.user.username}">Username</div>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Email</span>
+            <div class="detail-value" th:text="${request.user.email}">email@example.com</div>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Ruolo richiesto</span>
+            <div class="detail-value" th:text="${request.roleRequested}">WRITER</div>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Messaggio</span>
+            <div class="detail-value" th:text="${request.message}">Messaggio richiesta</div>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Data richiesta</span>
+            <div class="detail-value" th:text="${#temporals.format(request.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</div>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Stato</span>
+            <div class="detail-value">
+                <span th:if="${!request.processed}" class="status status-pending">Da gestire</span>
+                <span th:if="${request.processed}" class="status status-done">Gestita</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <form th:if="${!request.processed}" th:action="@{/admin/request/{id}/accept(id=${request.id})}" method="post">
+                <button type="submit" class="btn btn-accept">Accetta richiesta</button>
+            </form>
+
+            <a th:href="@{/admin/dashboard}" class="btn btn-back">Torna alla dashboard</a>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    © Aulab Chronicle - Progetto finale Java
+</footer>
+
+</body>
+</html>
